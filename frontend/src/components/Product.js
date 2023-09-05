@@ -7,18 +7,18 @@ function Product({ product }) {
     return (
         <>
             <Card className='my-3 p-3 rounded' style={{ width: '18rem' }}>
-                <Link to={`/product/${product._id}`}>
+                <Link to={`/product/${product.id}`}>
                     <Card.Img variant="top" src={product.image} />
                 </Link>
                 <Card.Body>
-                    <Link to={`/product/${product._id}`}>
+                    <Link to={`/product/${product.id}`}>
                         <Card.Title as='div'>
                             <strong>{product.name}</strong>
                         </Card.Title>
                     </Link>
                     <Card.Text as='div'>
                         <div className='my-3'>
-                            <Review value={product.rating} text={`${product.numReviews} reviews`} color='#f8e825' />
+                            <Review value={product.rating} text={`${product.num_reviews} reviews`} color='#f8e825' />
                         </div>
                     </Card.Text>
                     <Card.Text as='h3'>
