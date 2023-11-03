@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from base.models import Product
 from base.serializers import ProductSerializer
 
+
 @api_view(['GET'])
 def get_products(request):
     products = Product.objects.all()
