@@ -14,7 +14,7 @@ function ProductScreen() {
     const dispatch = useDispatch()
     useEffect(() => {
         dispatch(listProductDetails(id))
-    }, [])
+    }, [dispatch, id])
     const productDetails = useSelector(state => state.productDetails)
     const { loading, error, product } = productDetails
 
