@@ -1,12 +1,17 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { Form, Button, Row, Col, Image, ListGroup, Card, Container } from 'react-bootstrap'
+import { Button, Row, Col, Image, ListGroup, Card, Container } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
-import FormContainer from '../components/FormContainer'
 import CheckoutSteps from '../components/CheckoutSteps'
 import Message from '../components/Message'
+import { createOrder } from '../actions/orderActions'
+import { ORDER_CREATE_RESET } from '../constants/orderConstants'
 
 function PlaceOrderScreen() {
+
+    const orderCreate = useSelector(state => state.orderCreate)
+    const { order, success, error } = orderCreate
+
     const cart = useSelector(state => state.cart)
     const { shippingAddress } = cart
 
@@ -17,10 +22,29 @@ function PlaceOrderScreen() {
     cart.taxPrice = Number((0.082) * cart.itemsPrice).toFixed(2)
 
     cart.totalPrice = (Number(cart.itemsPrice) + Number(cart.shippingPrice) + Number(cart.taxPrice)).toFixed(2)
-    
+
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (success) {
+            navigate(`/order/${order.id}`)
+            dispatch({ type: ORDER_CREATE_RESET })
+        }
+    }, [success, order, navigate])
+
     const placeOrderHandler = () => {
-        console.log('order')
+        dispatch(createOrder({
+            orderItems: cart.cartItems,
+            shippingAddress: cart.shippingAddress,
+            paymentMethod: cart.paymentMethod,
+            itemsPrice: cart.itemsPrice,
+            shippingPrice: cart.shippingPrice,
+            taxPrice: cart.taxPrice,
+            totalPrice: cart.totalPrice,
+        }))
     }
+
     return (
         <Container>
             <CheckoutSteps step1 step2 step3 step4 />
@@ -110,6 +134,10 @@ function PlaceOrderScreen() {
                                     <Col>${cart.totalPrice}</Col>
                                 </Row>
                             </ListGroup.Item>
+
+                            {error && <ListGroup.Item>
+                                <Message variant='danger'>{error}</Message>
+                            </ListGroup.Item>}
 
                             <ListGroup.Item>
                                 <Button
