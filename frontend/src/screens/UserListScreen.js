@@ -76,10 +76,8 @@ function UserListScreen() {
                         ))}
                     </tbody>
                 </Table>
-            )
-            }
+            )}
         </Container>
-
     )
 }
 
