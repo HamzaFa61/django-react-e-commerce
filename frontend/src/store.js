@@ -3,11 +3,18 @@ import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { productListReducer, productDetailsReducer } from './reducers/productReducers';
 import { cartReducer } from './reducers/cartReducers';
-import { userLoginReducer } from './reducers/userReducers';
-import { userRegisterReducer } from './reducers/userReducers';
-import { userDetailsReducer } from './reducers/userReducers';
-import { userUpdateProfileReducer } from './reducers/userReducers';
-import { orderCreateReducer } from './reducers/orderReducers';
+import {
+    userLoginReducer,
+    userRegisterReducer,
+    userDetailsReducer,
+    userUpdateProfileReducer
+} from './reducers/userReducers';
+import {
+    orderCreateReducer,
+    orderDetailsReducer,
+    orderPayReducer,
+    orderListMyReducer
+} from './reducers/orderReducers';
 
 const reducer = combineReducers({
     productList: productListReducer,
@@ -18,6 +25,9 @@ const reducer = combineReducers({
     userDetails: userDetailsReducer,
     userUpdateProfile: userUpdateProfileReducer,
     orderCreate: orderCreateReducer,
+    orderDetails: orderDetailsReducer,
+    orderPay: orderPayReducer,
+    orderListMy: orderListMyReducer
 });
 
 const cartItemsFromStorage = localStorage.getItem('cartItems') ? JSON.parse(localStorage.getItem('cartItems')) : [];
@@ -29,7 +39,7 @@ const shippingAddressFromStorage = localStorage.getItem('shippingAddress') ? JSO
 const paymentMethodFromStorage = localStorage.getItem('paymentMethod') ? JSON.parse(localStorage.getItem('paymentMethod')) : {};
 
 const initialState = {
-    cart: { cartItems: cartItemsFromStorage , shippingAddress: shippingAddressFromStorage, paymentMethod: paymentMethodFromStorage},
+    cart: { cartItems: cartItemsFromStorage, shippingAddress: shippingAddressFromStorage, paymentMethod: paymentMethodFromStorage },
     userLogin: { userInfo: userInfoFromStorage },
 };
 

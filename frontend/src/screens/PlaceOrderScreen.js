@@ -31,7 +31,7 @@ function PlaceOrderScreen() {
             navigate(`/order/${order.id}`)
             dispatch({ type: ORDER_CREATE_RESET })
         }
-    }, [success, order, navigate])
+    }, [success, order, navigate, dispatch])
 
     const placeOrderHandler = () => {
         dispatch(createOrder({
