@@ -10,4 +10,5 @@ urlpatterns = [
     path('register/', user_views.register_user, name='register'),
     path('<str:pk>/', user_views.get_user_by_id, name='user-by-id'),
     path('profile/update/', user_views.update_user_profile, name='user-profile-update'),
+    path('update/<str:pk>/', user_views.update_user, name='user-update'),
 ]
