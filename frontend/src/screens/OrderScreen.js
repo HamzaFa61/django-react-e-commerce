@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { PayPalButton } from 'react-paypal-button-v2'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import { ORDER_PAY_RESET } from '../constants/orderConstants'
-import { getOrderDetails, payOrder } from '../actions/orderActions'
+import { ORDER_PAY_RESET, ORDER_DELIVERED_RESET } from '../constants/orderConstants'
+import { getOrderDetails, payOrder, deliverOrder } from '../actions/orderActions'
 
 function OrderScreen() {
     const { id } = useParams()
@@ -17,6 +17,9 @@ function OrderScreen() {
 
     const orderPay = useSelector(state => state.orderPay)
     const { loadin: loadingPay, success: successPay } = orderPay
+
+    const orderDelivered = useSelector(state => state.orderDelivered)
+    const { loading: loadingDeliver, success: successDeliver } = orderDelivered
 
     if (!loading && !error) {
         order.itemsPrice = order.orderItems.reduce((acc, item) => acc + item.price * item.qty, 0).toFixed(2)
@@ -35,8 +38,9 @@ function OrderScreen() {
         document.body.appendChild(script)
     }
     useEffect(() => {
-        if (!order || (successPay && !order.is_paid) || order.id !== Number(id)) {
+        if (!order || (successPay && !order.is_paid) || (successDeliver && !order.is_delivered) || order.id !== Number(id)) {
             dispatch({ type: ORDER_PAY_RESET })
+            dispatch({ type: ORDER_DELIVERED_RESET })
             dispatch(getOrderDetails(id))
         } else if (!order.is_paid) {
             if (!window.paypal) {
@@ -45,10 +49,14 @@ function OrderScreen() {
                 setSdkReady(true)
             }
         }
-    }, [id, order, dispatch, successPay])
+    }, [id, order, dispatch, successPay, successDeliver])
 
     const successPaymentHandler = (paymentResult) => {
         dispatch(payOrder(id, paymentResult))
+    }
+
+    const deliverHandler = () => {
+        dispatch(deliverOrder(order))
     }
 
     return loading ? <Loader /> : error ? <Message variant='danger'>{error}</Message> :
@@ -161,6 +169,13 @@ function OrderScreen() {
                                     </ListGroup.Item>
                                 )}
                             </ListGroup>
+
+                            {loadingDeliver && <Loader />}
+                            {order.is_paid && !order.is_delivered && (
+                                <ListGroup.Item>
+                                    <button type='button' className='btn btn-block' onClick={deliverHandler}>Mark As Delivered</button>
+                                </ListGroup.Item>
+                            )}
                         </Card>
                     </Col>
                 </Row>
