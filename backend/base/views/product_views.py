@@ -8,7 +8,8 @@ from rest_framework import status
 
 @api_view(['GET'])
 def get_products(request):
-    products = Product.objects.all()
+    keyword = request.query_params.get('keyword')
+    products = Product.objects.filter(name__icontains=keyword)
     serializer = ProductSerializer(products, many=True)
     return Response(serializer.data)
 
