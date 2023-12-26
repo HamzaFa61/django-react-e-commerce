@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { listProducts } from '../actions/productActions'
 import { Container, Row, Col } from 'react-bootstrap'
@@ -11,9 +12,13 @@ function HomeScreen() {
     const productList = useSelector(state => state.productList)
     const { loading, error, products } = productList
 
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    let keyword = searchParams.get('keyword') || '';
+
     useEffect(() => {
-        dispatch(listProducts())
-    }, [dispatch])
+        dispatch(listProducts(keyword))
+    }, [dispatch, keyword])
 
     return (
         <Container>
