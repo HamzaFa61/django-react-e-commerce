@@ -1,19 +1,20 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { listProducts, deleteProduct, createProduct } from '../actions/productActions'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import { Table, Button, Container, Row, Col } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import { PRODUCT_CREATE_RESET } from '../constants/productConstants'
+import Paginate from '../components/Paginate'
 
 function ProductListScreen() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
     const productList = useSelector(state => state.productList)
-    const { loading, error, products } = productList
+    const { loading, error, products, page, pages } = productList
 
     const productDelete = useSelector(state => state.productDelete)
     const { success: successDelete, error: errorDelete, loading: loadingDelete } = productDelete
@@ -24,6 +25,11 @@ function ProductListScreen() {
     const userLogin = useSelector(state => state.userLogin)
     const { userInfo } = userLogin
 
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    let keyword = searchParams.get('keyword') || '';
+    let pageNumber = searchParams.get('page') || 1;
+
     useEffect(() => {
         dispatch({ type: PRODUCT_CREATE_RESET })
         if (!userInfo || !userInfo.isAdmin) {
@@ -33,9 +39,9 @@ function ProductListScreen() {
             navigate(`/admin/product/${createdProduct.id}/edit`)
         }
         else {
-            dispatch(listProducts())
+            dispatch(listProducts(keyword, pageNumber))
         }
-    }, [dispatch, navigate, userInfo, successDelete, successCreate, createdProduct])
+    }, [dispatch, navigate, userInfo, successDelete, successCreate, createdProduct, keyword, pageNumber])
 
     const deleteHandler = (id) => {
         if (window.confirm('Are you sure')) {
@@ -70,40 +76,43 @@ function ProductListScreen() {
             ) : error ? (
                 <Message variant='danger'>{error}</Message>
             ) : (
-                <Table striped bordered hover responsive className='table-sm'>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>NAME</th>
-                            <th>PRICE</th>
-                            <th>CATEGORY</th>
-                            <th>BRAND</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {products.map(product => (
-                            <tr key={product.id}>
-                                <td>{product.id}</td>
-                                <td>{product.name}</td>
-                                <td>${product.price}</td>
-                                <td>{product.category}</td>
-                                <td>{product.brand}</td>
-                                <td>
-                                    <LinkContainer to={`/admin/product/${product.id}/edit`}>
-                                        <Button variant='warning' className='btn-sm'>
-                                            <i className='fas fa-edit'></i>
-                                        </Button>
-                                    </LinkContainer>
-
-                                    <Button variant='danger' className='btn-sm' onClick={() => deleteHandler(product.id)}>
-                                        <i className='fas fa-trash'></i>
-                                    </Button>
-                                </td>
+                <>
+                    <Table striped bordered hover responsive className='table-sm'>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>NAME</th>
+                                <th>PRICE</th>
+                                <th>CATEGORY</th>
+                                <th>BRAND</th>
+                                <th></th>
                             </tr>
-                        ))}
-                    </tbody>
-                </Table>
+                        </thead>
+                        <tbody>
+                            {products.map(product => (
+                                <tr key={product.id}>
+                                    <td>{product.id}</td>
+                                    <td>{product.name}</td>
+                                    <td>${product.price}</td>
+                                    <td>{product.category}</td>
+                                    <td>{product.brand}</td>
+                                    <td>
+                                        <LinkContainer to={`/admin/product/${product.id}/edit`}>
+                                            <Button variant='warning' className='btn-sm'>
+                                                <i className='fas fa-edit'></i>
+                                            </Button>
+                                        </LinkContainer>
+
+                                        <Button variant='danger' className='btn-sm' onClick={() => deleteHandler(product.id)}>
+                                            <i className='fas fa-trash'></i>
+                                        </Button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                    <Paginate pages={pages} page={page} isAdmin={true} />
+                </>
             )}
         </Container>
     )
