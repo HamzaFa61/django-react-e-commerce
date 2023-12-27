@@ -126,7 +126,7 @@ function ProfileScreen() {
                         <Loader />
                     ) : errorOrders ? (
                         <Message variant='danger'>{errorOrders}</Message>
-                    ) : (
+                    ) : orders ? (
                         <Table striped bordered hover responsive className='table-sm'>
                             <thead>
                                 <tr>
@@ -162,7 +162,8 @@ function ProfileScreen() {
                                 ))}
                             </tbody>
                         </Table>
-                    )}
+                    )
+                        : <Message variant='danger'>No orders found</Message>}
                 </Col>
             </Row>
         </Container>
