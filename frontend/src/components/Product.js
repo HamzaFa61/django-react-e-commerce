@@ -24,7 +24,6 @@ function Product({ product }) {
                     <Card.Text as='h3'>
                         ${product.price}
                     </Card.Text>
-                    <Button variant="primary">Go somewhere</Button>
                 </Card.Body>
             </Card>
         </>
