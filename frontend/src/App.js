@@ -3,7 +3,7 @@ import Header from "./components/Header";
 import HomeScreen from "./screens/HomeScreen";
 import "./bootstrap.min.css"
 import {
-	BrowserRouter as Router,
+	HashRouter as Router,
 	Routes,
 	Route,
 } from "react-router-dom";
