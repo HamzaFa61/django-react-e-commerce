@@ -7,6 +7,7 @@ import Product from '../components/Product'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import Paginate from '../components/Paginate'
+import ProductCarousel from '../components/ProductCarousel'
 
 function HomeScreen() {
     const dispatch = useDispatch()
@@ -24,6 +25,7 @@ function HomeScreen() {
 
     return (
         <Container>
+            {!keyword && <ProductCarousel />}
             <h1 className='my-4'>
                 Latest Products
             </h1 >
