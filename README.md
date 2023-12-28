@@ -57,8 +57,18 @@ This project requires python version 3.8.10 (https://www.python.org/downloads/re
     python3.8 manage.py createsuperuser
     ```
     Now, enter the username, email and password for the superuser.
-
-5. Run the server
+5. Setup frontend:
+    Please open up a terminal and navigate to the frontend directory and run the following commands:
+    ```shell
+    npm install
+    ```
+    This will install all the required packages for the frontend.
+    Now, run the following command to build the frontend:
+    ```shell
+    npm run build
+    ```
+    This will create a build directory in the frontend directory.
+6. Run the server
     ```shell
     python3.8 manage.py runserver
     ```
