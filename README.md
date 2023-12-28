@@ -1,4 +1,4 @@
-# ProShop (An E-Commerce Website built with Django and React)
+# ProShop (An E-Commerce Website built with Django Rest Framework and React)
 ## Features
 - Full featured shopping cart
 - Product reviews and ratings
